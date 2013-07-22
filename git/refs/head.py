@@ -207,17 +207,12 @@ class Head(Reference):
 			a new branch has been created.
 		
 		:note:
-			By default it is only allowed to checkout heads - everything else
-			will leave the HEAD detached which is allowed and possible, but remains
-			a special state that some tools might not be able to handle."""
-		args = list()
-		kwargs['f'] = force
-		if kwargs['f'] == False:
-			kwargs.pop('f')
-		
-		self.repo.git.checkout(self, **kwargs)
+			To check out arbitrary references (which may leave the head in a detatched
+			state!!!), see `repo.base.Repo.checkout`."""
+
+		self.repo.checkout(self, force, **kwargs)
 		return self.repo.active_branch
-		
+
 	#{ Configruation
 	
 	def _config_parser(self, read_only):

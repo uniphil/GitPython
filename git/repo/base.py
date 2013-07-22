@@ -763,6 +763,38 @@ class Repo(object):
 		return self
 	
 	rev_parse = rev_parse
-		
+
+	def checkout(self, identifier, force=False, **kwargs):
+		"""Checkout this head by setting the HEAD to this reference, by updating the index
+		to reflect the tree we point to and by updating the working tree to reflect 
+		the latest index.
+
+		The command will fail if changed working tree files would be overwritten.
+
+		:param identifier:
+			The branch name or commit ref to check out. Heads and commits stringify to the
+			right thing, just go for it. Maybe this works for tags too? (think it should)
+
+		:param force:
+			If True, changes to the index and the working tree will be discarded.
+			If False, GitCommandError will be raised in that situation.
+
+		:param kwargs:
+			Additional keyword arguments to be passed to git checkout, i.e.
+			b='new_branch' to create a new branch at the given spot.
+
+		:return:
+			None, since HEAD may be detatched. Use head.checkout if you want to check out
+			to a head.
+
+		:note:
+			Checking out anything other than a hread will leave the HEAD detached which is
+			allowed and possible, but remains a special state that some tools might not be
+			able to handle."""
+
+		if force:
+			kwargs['f'] = True
+		self.git.checkout(identifier, **kwargs)
+
 	def __repr__(self):
 		return '<git.Repo "%s">' % self.git_dir
